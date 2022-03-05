@@ -1,37 +1,76 @@
-let images = ['/img/1.jpg', '/img/2.jpg', '/img/3.jpg', '/img/4.jpg', '/img/5.jpg', '/img/6.jpg', '/img/7.jpg', '/img/8.jpg'];
-let container = document.getElementById("container");
-let overlay = document.getElementById("overlay");
-let fakeImg = document.getElementById("fake-img");
-
-// set All images to screen 
-for (let i = 0; i < 8; i++) {
-    let img = document.createElement("img");
-    img.src = images[i];
-    container.appendChild(img);
-}
-
+const container = document.getElementById("container");
+const overlay = document.getElementById("overlay");
+const fakeBox = document.getElementById("fake-box");
+const closeBtn = document.getElementById("close-btn");
 
 // On Click on any IMG
 document.addEventListener('click', (e) => {
     let element = e.target;
     if (element.tagName == "IMG") {
         zooming(element);
-    } else {
+    } else if (element.id == "overlay" || element.id == "close-btn") {
         removeZooming();
     }
 })
 
 // Remove Zooming
 function removeZooming() {
-    fakeImg.classList.remove("zoom");
-    fakeImg.classList.add("hidden");
+    fakeBox.removeChild(fakeBox.lastChild);
+    fakeBox.classList.add("hidden");
     overlay.classList.remove("overlay");
 }
 
 // Zoom on any image
 function zooming(element) {
-    fakeImg.src = element.src;
-    fakeImg.classList.remove("hidden");
-    fakeImg.classList.add("zoom");
+    fakeBox.appendChild(elementFactory(element));
+    fakeBox.classList.remove("hidden");
+    fakeBox.classList.add("zoom");
     overlay.classList.add("overlay");
+}
+
+
+function addImg(element) {
+    let img = document.createElement("img");
+    img.src = element.src;
+    return img;
+}
+
+function createForm() {
+    let form = document.createElement("form");
+    form.classList.add("form");
+    let userName = document.createElement("input");
+    userName.type = "text";
+    userName.placeholder = "Username";
+    let pwd = document.createElement("input");
+    pwd.type = "password";
+    pwd.placeholder = "Password";
+    let signin = document.createElement("button");
+    signin.innerText = "Sign in";
+    let forgetPwd = document.createElement("a");
+    forgetPwd.innerText = "Forget Password";
+
+    form.appendChild(userName);
+    form.appendChild(pwd);
+    form.appendChild(signin);
+    form.appendChild(forgetPwd);
+    return form;
+}
+
+
+function addVideo() {
+    let frame = document.createElement("iframe");
+    frame.classList.add("video");
+    frame.src = "https://www.youtube.com/embed/0ZGbIKd0XrM";
+    return frame;
+}
+
+function elementFactory(element) {
+    switch(element.id) {
+        case "image":
+            return addImg(element);
+        case "form":
+            return createForm();
+        case "video":
+            return addVideo();
+    }
 }
